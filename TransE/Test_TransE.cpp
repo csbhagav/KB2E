@@ -184,7 +184,7 @@ public:
             filter = 0;
 
             for (int i = a.size() - 1; i >= 0; i--) {
-                cout<<"OBJ"<<"\t"<<h<<"\t"<<a[i].first<"\t"<<rel<<"\t"<<a[i].second<<endl;
+                cout<<"OBJ"<<"\t"<<h<<"\t"<<a[i].first<<"\t"<<rel<<"\t"<<a[i].second<<endl;
             }
 
 

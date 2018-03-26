@@ -60,7 +60,7 @@ map<int, double> left_num, right_num;
 class Train {
 
 public:
-    map <pair<int, int>, map<int, int>> ok;
+    map <pair<int, int>, map<int, int> > ok;
 
     void add(int x, int y, int z) {
         fb_h.push_back(x);
@@ -107,9 +107,9 @@ private:
     double rate, margin;
     double belta;
     vector<int> fb_h, fb_l, fb_r;
-    vector <vector<int>> feature;
-    vector <vector<double>> relation_vec, entity_vec;
-    vector <vector<double>> relation_tmp, entity_tmp;
+    vector <vector<int> > feature;
+    vector <vector<double> > relation_vec, entity_vec;
+    vector <vector<double> > relation_tmp, entity_tmp;
 
     double norm(vector<double> &a) {
         double x = vec_len(a);

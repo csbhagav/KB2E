@@ -8,6 +8,8 @@
 #include<algorithm>
 #include<cmath>
 #include<cstdlib>
+#include<fstream>
+
 
 using namespace std;
 
@@ -114,7 +116,8 @@ public:
         FILE *f1 = fopen(("relation2vec." + version).c_str(), "r");
         FILE *f3 = fopen(("entity2vec." + version).c_str(), "r");
 
-        ofstream outputFile("predictions.tsv");
+        ofstream outputFile;
+        outputFile.open("predictions.tsv");
 
         cout << relation_num << ' ' << entity_num << endl;
         int relation_num_fb = relation_num;

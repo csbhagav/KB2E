@@ -113,6 +113,9 @@ public:
     void run() {
         FILE *f1 = fopen(("relation2vec." + version).c_str(), "r");
         FILE *f3 = fopen(("entity2vec." + version).c_str(), "r");
+
+        ofstream outputFile("predictions.tsv");
+
         cout << relation_num << ' ' << entity_num << endl;
         int relation_num_fb = relation_num;
         relation_vec.resize(relation_num_fb);
@@ -151,8 +154,8 @@ public:
             sort(a.begin(), a.end(), cmp); // Sorted predictions
             double ttt = 0;
             int filter = 0;
-            for (int i = a.size() - 1; i >= 0; i--) {
-                cout<<"SUBJ"<<"\t"<<a[i].first<<"\t"<<l<<"\t"<<rel<<"\t"<<a[i].second<<endl;
+            for (int i = a.size() - 1; i >= a.size() - 11; i--) {
+                outputFile<<"SUBJ"<<"\t"<<a[i].first<<"\t"<<l<<"\t"<<rel<<"\t"<<a[i].second<<endl;
             }
 
             for (int i = a.size() - 1; i >= 0; i--) {
@@ -183,8 +186,8 @@ public:
             ttt = 0; // Unused
             filter = 0;
 
-            for (int i = a.size() - 1; i >= 0; i--) {
-                cout<<"OBJ"<<"\t"<<h<<"\t"<<a[i].first<<"\t"<<rel<<"\t"<<a[i].second<<endl;
+            for (int i = a.size() - 1; i >= a.size() - 11; i--) {
+                outputFile<<"OBJ"<<"\t"<<h<<"\t"<<a[i].first<<"\t"<<rel<<"\t"<<a[i].second<<endl;
             }
 
 
@@ -217,6 +220,7 @@ public:
              << rp_n / fb_r.size() << '\t'
              << rsum_filter / fb_r.size() << '\t'
              << rp_n_filter / fb_r.size() << endl;
+        outputFile.close();
     }
 
 };

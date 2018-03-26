@@ -22,7 +22,7 @@ map<int, string> id2entity, id2relation;
 map <string, string> mid2name, mid2type;
 map<int, map<int, int> > entity2num;
 map<int, int> e2num;
-map <pair<string, string>, map<string, double>> rel_left, rel_right;
+map<pair<string,string>,map<string,double> > rel_left,rel_right;
 
 int relation_num, entity_num;
 int n = 100;
@@ -44,7 +44,7 @@ void vec_output(vector<double> a) {
         if (i % 10 == 9)
             cout << endl;
     }
-    cout << "-------------------------" << endl;
+    cout<<"-------------------------"<<endl;
 }
 
 double sqr(double x) {
@@ -62,12 +62,12 @@ double cmp(pair<int, double> a, pair<int, double> b) {
 }
 
 class Test {
-    vector <vector<double>> relation_vec, entity_vec;
+    vector<vector<double> > relation_vec,entity_vec;
 
 
     vector<int> h, l, r;
     vector<int> fb_h, fb_l, fb_r;
-    map <pair<int, int>, map<int, int>> ok;
+    map<pair<int,int>, map<int,int> > ok;
     double res;
 
 public:
@@ -143,7 +143,7 @@ public:
             int l = fb_l[testid]; // Object of a relation
             int rel = fb_r[testid]; // Relation type
 
-            vector <pair<int, double>> a; // Predictions
+            vector<pair<int,double> > a; // Predictions
             for (int i = 0; i < entity_num; i++) {
                 double sum = calc_sum(i, l, rel);
                 a.push_back(make_pair(i, sum));

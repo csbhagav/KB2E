@@ -106,9 +106,6 @@ public:
                 }
                 norm(entity_vec[i]);
             }
-            for (int ii=0; ii<n; ii++){
-                cout << entity_vec[0][ii] << endl;
-            }
         } else {
             for (int i = 0; i < entity_num; i++) {
                 for (int ii = 0; ii < n; ii++)

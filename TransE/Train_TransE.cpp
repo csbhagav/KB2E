@@ -8,6 +8,8 @@
 #include<ctime>
 #include<cmath>
 #include<cstdlib>
+#include <fstream>
+
 
 using namespace std;
 
@@ -69,7 +71,7 @@ public:
         ok[make_pair(x, z)][y] = 1;
     }
 
-    void run(int n_in, double rate_in, double margin_in, int method_in) {
+    void run(int n_in, double rate_in, double margin_in, int method_in, char* pretrainedEntityFile) {
         n = n_in;
         rate = rate_in;
         margin = margin_in;
@@ -86,16 +88,34 @@ public:
         entity_tmp.resize(entity_num);
         for (int i = 0; i < entity_tmp.size(); i++)
             entity_tmp[i].resize(n);
+
+        // Initialize with pre trained embeddings here
+
         for (int i = 0; i < relation_num; i++) {
             for (int ii = 0; ii < n; ii++)
                 relation_vec[i][ii] = randn(0, 1.0 / n, -6 / sqrt(n), 6 / sqrt(n));
         }
-        for (int i = 0; i < entity_num; i++) {
-            for (int ii = 0; ii < n; ii++)
-                entity_vec[i][ii] = randn(0, 1.0 / n, -6 / sqrt(n), 6 / sqrt(n));
-            norm(entity_vec[i]);
-        }
 
+        if (pretrainedEntityFile != NULL) {
+            ifstream inFile;
+            inFile.open(pretrainedEntityFile);
+            for (int i = 0; i < entity_num; i++) {
+
+                for (int ii = 0; ii < n; ii++) {
+                    inFile >> entity_vec[i][ii];
+                }
+                norm(entity_vec[i]);
+            }
+            for (int ii=0; ii<n; ii++){
+                cout << entity_vec[0][ii] << endl;
+            }
+        } else {
+            for (int i = 0; i < entity_num; i++) {
+                for (int ii = 0; ii < n; ii++)
+                    entity_vec[i][ii] = randn(0, 1.0 / n, -6 / sqrt(n), 6 / sqrt(n));
+                norm(entity_vec[i]);
+            }
+        }
 
         bfgs();
     }
@@ -196,19 +216,24 @@ private:
 
             double x = 2 * (entity_vec[e2_a][ii] - entity_vec[e1_a][ii] - relation_vec[rel_a][ii]);
             if (L1_flag)
-                if (x > 0)
+                if (x > 0) {
                     x = 1;
-                else
+                }
+                else {
                     x = -1;
+                }
+
             relation_tmp[rel_a][ii] -= -1 * rate * x;
             entity_tmp[e1_a][ii] -= -1 * rate * x;
             entity_tmp[e2_a][ii] += -1 * rate * x;
             x = 2 * (entity_vec[e2_b][ii] - entity_vec[e1_b][ii] - relation_vec[rel_b][ii]);
             if (L1_flag)
-                if (x > 0)
+                if (x > 0) {
                     x = 1;
-                else
+                }
+                else {
                     x = -1;
+                }
             relation_tmp[rel_b][ii] -= rate * x;
             entity_tmp[e1_b][ii] -= rate * x;
             entity_tmp[e2_b][ii] += rate * x;
@@ -285,7 +310,7 @@ void prepare() {
     fclose(f_kb);
 }
 
-int ArgPos(char *str, int argc, char **argv) {
+int argumentPosition(char *str, int argc, char **argv) {
     int a;
     for (a = 1; a < argc; a++)
         if (!strcmp(str, argv[a])) {
@@ -305,19 +330,25 @@ int main(int argc, char **argv) {
     double rate = 0.001;
     double margin = 1;
     int i;
-    if ((i = ArgPos((char *) "-size", argc, argv)) > 0) n = atoi(argv[i + 1]);
-    if ((i = ArgPos((char *) "-margin", argc, argv)) > 0) margin = atoi(argv[i + 1]);
-    if ((i = ArgPos((char *) "-method", argc, argv)) > 0) method = atoi(argv[i + 1]);
+    char* pretrainedEntityFile = NULL;
+
+    if ((i = argumentPosition((char *) "-size", argc, argv)) > 0) n = atoi(argv[i + 1]);
+    if ((i = argumentPosition((char *) "-margin", argc, argv)) > 0) margin = atoi(argv[i + 1]);
+    if ((i = argumentPosition((char *) "-method", argc, argv)) > 0) method = atoi(argv[i + 1]);
+    if ((i = argumentPosition((char *) "-pretrained_entity", argc, argv)) > 0) pretrainedEntityFile = argv[i + 1];
     cout << "size = " << n << endl;
     cout << "learing rate = " << rate << endl;
     cout << "margin = " << margin << endl;
+    if (pretrainedEntityFile != NULL){
+        cout << "pretrained entity embeddings file = " << pretrainedEntityFile << endl;
+    }
     if (method)
         version = "bern";
     else
         version = "unif";
     cout << "method = " << version << endl;
     prepare();
-    train.run(n, rate, margin, method);
+    train.run(n, rate, margin, method, pretrainedEntityFile);
 }
 
 
